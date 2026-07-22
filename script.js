@@ -1,8 +1,8 @@
 const gameboard = (() => {
   const board = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
+    null, null, null,
+    null, null, null,
+    null, null, null
   ];
   let currentPlayer = 0;
   
@@ -32,13 +32,14 @@ const gameboard = (() => {
     return currentPlayer;
   };
 
-  const makeMove = (row, col) => {
+  const makeMove = (move) => {
     let piece = currentPlayer.piece;
-    if (board[row][col] === null) {
-      board[row][col] = piece;
+    if (board[move] === null) {
+      board[move] = piece;
     } else {
       console.log('Invalid move! Cell is already occupied.');
     }
+    switchPlayer()
   }
 
   return {
@@ -51,18 +52,23 @@ const gameboard = (() => {
 
 function resetGame() {
   gameboard.board = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
+    null, null, null,
+    null, null, null,
+    null, null, null
   ];
   gameboard.currentPlayer = 0;
 }
 
 function printBoard() {
   console.log('Current Board:');
-  for (let i = 0; i < 3; i++) {
-    console.log(gameboard.board[i].map(cell => cell === null ? '-' : cell).join(' | '));
+  let printedBoard = []
+  printedBoard = gameboard.board.map(item => item ?? '-')
+  for (let i = 0; i < printedBoard.length; i += 3) {
+    const chunk = printedBoard.slice(i, i + 3).join(", ");
+    const separator = (i + 3 < printedBoard.length) ? " |" : "";
+    console.log(`${chunk}${separator}`);
   }
+  checkWinner()
 }
 
 function startGame() {
@@ -70,14 +76,36 @@ function startGame() {
   printBoard();
 }
 
+const winning_combos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+function checkWinner() {
+  const board = gameboard.board
+  for (const combo of winning_combos) {
+    const [a, b, c] = combo;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      console.log(`${board[a]} is the Winner`)
+    }
+  }
+  const isTie = board.every(cell => cell !== null);
+  if (isTie) {
+    return "Tie"
+  }
+  return null;
+}
+
+function computerMove() {
+  const board = gameboard.board
+  const randomNumber = Math.floor((Math.random() * 9))
+  gameboard.makeMove(randomNumber)
+}
 
 startGame();
-gameboard.makeMove(1, 1)
-gameboard.switchPlayer()
+gameboard.makeMove(0)
 printBoard()
-gameboard.makeMove(1, 2)
-gameboard.switchPlayer()
+computerMove()
 printBoard()
-gameboard.makeMove(2, 2)
-gameboard.switchPlayer()
+gameboard.makeMove(4)
+printBoard()
+computerMove()
+printBoard()
+gameboard.makeMove(8)
 printBoard()
