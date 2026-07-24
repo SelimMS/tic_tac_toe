@@ -1,3 +1,5 @@
+const game = document.get
+
 const gameboard = (() => {
   const board = [
     null, null, null,
@@ -95,8 +97,15 @@ function checkWinner() {
 function computerMove() {
   const board = gameboard.board
   const randomNumber = Math.floor((Math.random() * 9))
-  gameboard.makeMove(randomNumber)
+  const emptySquare = board.findIndex((element) => element == null)
+  console.log(emptySquare)
+  if (board[randomNumber] === null) {
+    gameboard.makeMove(randomNumber)
+  } else {
+    gameboard.makeMove(emptySquare)
+  }
 }
+
 
 startGame();
 gameboard.makeMove(0)
@@ -108,4 +117,6 @@ printBoard()
 computerMove()
 printBoard()
 gameboard.makeMove(8)
+printBoard()
+computerMove()
 printBoard()
