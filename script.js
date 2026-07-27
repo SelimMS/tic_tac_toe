@@ -1,4 +1,6 @@
-const game = document.get
+const game = document.querySelector('.game')
+const ticTacToe = document.createElement('div')
+game.appendChild(ticTacToe)
 
 const gameboard = (() => {
   const board = [
@@ -61,15 +63,41 @@ function resetGame() {
   gameboard.currentPlayer = 0;
 }
 
+const gameDisplay = document.createElement('div')
+game.appendChild(gameDisplay)
+gameDisplay.classList.add('container')
+for (let i = 0; i < gameboard.board.length; i++) {
+  const box = document.createElement('div')
+  box.classList.add('tic')
+  box.id = i
+  gameDisplay.appendChild(box)
+  box.addEventListener('click', (e) => {
+    if (winner == null) {
+      let piece = gameboard.currentPlayer.piece
+      e.target.textContent = piece
+      console.log(e.target.id)
+      gameboard.makeMove(e.target.id)
+      computerMove()
+      document.getElementById(squareUsed).textContent = 'O'
+      printBoard()
+    }
+  })
+}
+
+
+
 function printBoard() {
   console.log('Current Board:');
   let printedBoard = []
+  let displayBoard = []
   printedBoard = gameboard.board.map(item => item ?? '-')
   for (let i = 0; i < printedBoard.length; i += 3) {
     const chunk = printedBoard.slice(i, i + 3).join(", ");
     const separator = (i + 3 < printedBoard.length) ? " |" : "";
     console.log(`${chunk}${separator}`);
+    displayBoard.push(`${chunk}`)
   }
+  console.log(displayBoard)
   checkWinner()
 }
 
@@ -78,6 +106,10 @@ function startGame() {
   printBoard();
 }
 
+let winner = null
+const winnerText = document.createElement('p')
+game.append(winnerText)
+winnerText.classList.add('winnerText')
 const winning_combos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
 function checkWinner() {
   const board = gameboard.board
@@ -85,6 +117,9 @@ function checkWinner() {
     const [a, b, c] = combo;
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       console.log(`${board[a]} is the Winner`)
+      winner = board[a]
+      winnerText.textContent = `${winner} is the winner`
+
     }
   }
   const isTie = board.every(cell => cell !== null);
@@ -94,6 +129,7 @@ function checkWinner() {
   return null;
 }
 
+let squareUsed = null
 function computerMove() {
   const board = gameboard.board
   const randomNumber = Math.floor((Math.random() * 9))
@@ -101,22 +137,25 @@ function computerMove() {
   console.log(emptySquare)
   if (board[randomNumber] === null) {
     gameboard.makeMove(randomNumber)
+    squareUsed = randomNumber
   } else {
     gameboard.makeMove(emptySquare)
+    squareUsed = emptySquare
   }
+  return squareUsed
 }
 
 
 startGame();
-gameboard.makeMove(0)
-printBoard()
-computerMove()
-printBoard()
-gameboard.makeMove(4)
-printBoard()
-computerMove()
-printBoard()
-gameboard.makeMove(8)
-printBoard()
-computerMove()
-printBoard()
+// gameboard.makeMove(0)
+// printBoard()
+// computerMove()
+// printBoard()
+// gameboard.makeMove(4)
+// printBoard()
+// computerMove()
+// printBoard()
+// gameboard.makeMove(8)
+// printBoard()
+// computerMove()
+// printBoard()
