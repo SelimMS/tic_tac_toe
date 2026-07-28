@@ -84,8 +84,8 @@ for (let i = 0; i < gameboard.board.length; i++) {
             computerMove()
             document.getElementById(squareUsed).textContent = 'O'
             printBoard()
-            checkWinner()
             winnerText.textContent = `Player turn...`
+            checkWinner()
           }, 1000)
       }
     }
@@ -144,13 +144,12 @@ function computerMove() {
   if (board[randomNumber] === null) {
     gameboard.makeMove(randomNumber)
     squareUsed = randomNumber
-    checkWinner()
   } else {
     gameboard.makeMove(emptySquare)
     squareUsed = emptySquare
-    checkWinner()
   }
   return squareUsed
+  checkWinner()
 }
 
 
