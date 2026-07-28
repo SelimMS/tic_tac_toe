@@ -77,9 +77,17 @@ for (let i = 0; i < gameboard.board.length; i++) {
       e.target.textContent = piece
       console.log(e.target.id)
       gameboard.makeMove(e.target.id)
-      computerMove()
-      document.getElementById(squareUsed).textContent = 'O'
-      printBoard()
+      checkWinner()
+      if (winner == null) {
+        winnerText.textContent = `Computer is thinking...`
+        setTimeout(() => {
+            computerMove()
+            document.getElementById(squareUsed).textContent = 'O'
+            printBoard()
+            checkWinner()
+            winnerText.textContent = `Player turn...`
+          }, 1000)
+      }
     }
   })
 }
@@ -98,7 +106,6 @@ function printBoard() {
     displayBoard.push(`${chunk}`)
   }
   console.log(displayBoard)
-  checkWinner()
 }
 
 function startGame() {
@@ -119,7 +126,6 @@ function checkWinner() {
       console.log(`${board[a]} is the Winner`)
       winner = board[a]
       winnerText.textContent = `${winner} is the winner`
-
     }
   }
   const isTie = board.every(cell => cell !== null);
@@ -134,13 +140,15 @@ function computerMove() {
   const board = gameboard.board
   const randomNumber = Math.floor((Math.random() * 9))
   const emptySquare = board.findIndex((element) => element == null)
-  console.log(emptySquare)
+  console.log('Computer is thinking...')
   if (board[randomNumber] === null) {
     gameboard.makeMove(randomNumber)
     squareUsed = randomNumber
+    checkWinner()
   } else {
     gameboard.makeMove(emptySquare)
     squareUsed = emptySquare
+    checkWinner()
   }
   return squareUsed
 }
